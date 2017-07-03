@@ -18,7 +18,8 @@ sudo mv generic-metal/metal /usr/local/bin/.
 ### Download a prostate cancer dataset and unpack
 
 ```
-curl -O https://de.cyverse.org/dl/d/9DEF6A65-F0A7-4C6E-8633-957C118FD1B3/meta_GWAS.tar.gz
+#curl -O https://de.cyverse.org/dl/d/9DEF6A65-F0A7-4C6E-8633-957C118FD1B3/meta_GWAS.tar.gz
+wget https://de.cyverse.org/dl/d/9DEF6A65-F0A7-4C6E-8633-957C118FD1B3/meta_GWAS.tar.gz
 tar -xvzf meta_GWAS.tar.gz
 cd ~/meta_GWAS
 ```
