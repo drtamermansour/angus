@@ -13,7 +13,8 @@ log in, and then make & change into a working directory:
       
 ## Download trimmed Fastq files 
 
-      wget https://de.cyverse.org/dl/d/3CE425D7-ECDE-46B8-AB7F-FAF07048AD42/samples.tar.gz
+      #wget https://de.cyverse.org/dl/d/3CE425D7-ECDE-46B8-AB7F-FAF07048AD42/samples.tar.gz
+      wget https://github.com/drtamermansour/GATK_GWAS_downloads/blob/master/samples.tar.gz
       tar xvzf samples.tar.gz
       rm samples.tar.gz
 
@@ -46,7 +47,8 @@ log in, and then make & change into a working directory:
 
 3.  download and prepare the reference for mapping
 
-        wget https://de.cyverse.org/dl/d/A9330898-FC54-42A5-B205-B1B2DC0E91AE/dog_chr5.fa.gz
+        #wget https://de.cyverse.org/dl/d/A9330898-FC54-42A5-B205-B1B2DC0E91AE/dog_chr5.fa.gz
+        wget https://github.com/drtamermansour/GATK_GWAS_downloads/raw/master/dog_chr5.fa.gz
         gunzip dog_chr5.fa.gz
         bwa index -a bwtsw dog_chr5.fa
 
@@ -125,7 +127,8 @@ log in, and then make & change into a working directory:
 ## Prepare for the Genome Analysis Toolkit (GATK) analysis
 1.  download Genome Analysis Toolkit (GATK)
 
-        wget https://de.cyverse.org/dl/d/6177B1E0-718A-4F95-A83B-C3B88E23C093/GenomeAnalysisTK-3.7-0.tar.bz2
+        #wget https://de.cyverse.org/dl/d/6177B1E0-718A-4F95-A83B-C3B88E23C093/GenomeAnalysisTK-3.7-0.tar.bz2
+        wget https://github.com/drtamermansour/GATK_GWAS_downloads/raw/master/GenomeAnalysisTK-3.7-0.tar.bz2
         tar xjf GenomeAnalysisTK-3.7-0.tar.bz2
 
 2. Prepare GATK dictionary and index for the reference genome
