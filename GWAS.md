@@ -25,9 +25,11 @@ To test the association of of a genome-wide set of genetic variants with a given
 ## Download the sample VCF file and phenotype data
 Genotyping of 476840 SNPs in 53 dogs (24 yellow coat and 29 dark coat) 
 
-      wget https://de.cyverse.org/dl/d/E0A502CC-F806-4857-9C3A-BAEAA0CCC694/pruned_coatColor_maf_geno.vcf.gz
+      #wget https://de.cyverse.org/dl/d/E0A502CC-F806-4857-9C3A-BAEAA0CCC694/pruned_coatColor_maf_geno.vcf.gz
+      wget https://github.com/drtamermansour/GATK_GWAS_downloads/raw/master/pruned_coatColor_maf_geno.vcf.gz
       gunzip pruned_coatColor_maf_geno.vcf.gz
-      wget https://de.cyverse.org/dl/d/3B5C1853-C092-488C-8C2F-CE6E8526E96B/coatColor.pheno
+      #wget https://de.cyverse.org/dl/d/3B5C1853-C092-488C-8C2F-CE6E8526E96B/coatColor.pheno
+      wget https://raw.githubusercontent.com/drtamermansour/GATK_GWAS_downloads/master/coatColor.pheno
       
 ## convert VCF into Plink readable format (map,ped) then Plink binary format (fam,bed,bim)
 
