@@ -5,7 +5,7 @@ to large mammalian genomes.
 
 ## Getting started
 
-[Start up an m1.medium instance running Ubuntu 16.04 on Jetstream.](jetstream/boot.html)
+[Start up an Ubuntu 16.04 instance in a vriual machine on your computer.](vm.html)
 
 log in, and then make & change into a working directory:
 
@@ -14,7 +14,7 @@ log in, and then make & change into a working directory:
 ## Download trimmed Fastq files 
 
       #wget https://de.cyverse.org/dl/d/3CE425D7-ECDE-46B8-AB7F-FAF07048AD42/samples.tar.gz
-      wget https://github.com/drtamermansour/GATK_GWAS_downloads/blob/master/samples.tar.gz
+      cp /media/sf_shared_VM/samples.tar.gz .
       tar xvzf samples.tar.gz
       rm samples.tar.gz
 
@@ -31,12 +31,13 @@ log in, and then make & change into a working directory:
 1.  Install [bwa](http://bio-bwa.sourceforge.net/bwa.shtml):
 
         cd
-        curl -L https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.15.tar.bz2/download > bwa-0.7.15.tar.bz2
+        #curl -L https://sourceforge.net/projects/bio-bwa/files/bwa-0.7.15.tar.bz2/download > bwa-0.7.15.tar.bz2
+        cp /media/sf_shared_VM/bwa-0.7.15.tar.bz2 .
         tar xjvf bwa-0.7.15.tar.bz2
         cd bwa-0.7.15
         make
       
-        sudo cp bwa /usr/local/bin
+        cp bwa /usr/local/bin
       
         echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
         source ~/.bashrc
@@ -48,7 +49,7 @@ log in, and then make & change into a working directory:
 3.  download and prepare the reference for mapping
 
         #wget https://de.cyverse.org/dl/d/A9330898-FC54-42A5-B205-B1B2DC0E91AE/dog_chr5.fa.gz
-        wget https://github.com/drtamermansour/GATK_GWAS_downloads/raw/master/dog_chr5.fa.gz
+        cp /media/sf_shared_VM/dog_chr5.fa.gz .
         gunzip dog_chr5.fa.gz
         bwa index -a bwtsw dog_chr5.fa
 
@@ -66,7 +67,7 @@ log in, and then make & change into a working directory:
 
         R2=$(echo $R1 | sed 's/_R1_/_R2_/')
         echo $R1 $R2
-        bwa mem -t 4 -M -R "@RG\tID:$RGID\tSM:$SM\tPL:$PL\tLB:$LB\tPU:$PU" dog_chr5.fa $R1 $R2 > ${R1%_R1_001.pe.fq.gz}.sam
+        bwa mem -t 1 -M -R "@RG\tID:$RGID\tSM:$SM\tPL:$PL\tLB:$LB\tPU:$PU" dog_chr5.fa $R1 $R2 > ${R1%_R1_001.pe.fq.gz}.sam
       done
 
 ## Generate sorted BAM files
@@ -86,21 +87,23 @@ log in, and then make & change into a working directory:
 ## Merge replicates (one library running on two lanes):
 1.  Install Java
 
-        sudo mkdir -p /usr/local/java
+        mkdir -p /usr/local/java
         cd /usr/local/java
-        sudo wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
-        sudo tar xvzf jdk-8u131-linux-x64.tar.gz
+        #wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+        cp /media/sf_shared_VM/jdk-8u131-linux-x64.tar.gz .        
+        tar xvzf jdk-8u131-linux-x64.tar.gz
         echo 'export PATH=$PATH:/usr/local/java/jdk1.8.0_131/jre/bin' >> ~/.bashrc
         source ~/.bashrc
 
 2.  Download Picard tools
 
         cd ~/GATK_tutorial
-        wget https://github.com/broadinstitute/picard/releases/download/2.9.4/picard.jar
+        #wget https://github.com/broadinstitute/picard/releases/download/2.9.4/picard.jar
+        cp /media/sf_shared_VM/picard.jar .        
 
 3.  merge the replicates
 
-        java  -Xmx10g -jar picard.jar MergeSamFiles I=BD143_TGACCA_L005.sorted.bam I=BD143_TGACCA_L006.sorted.bam OUTPUT=BD143_TGACCA_merged.sorted.bam
+        java  -Xmx1g -jar picard.jar MergeSamFiles I=BD143_TGACCA_L005.sorted.bam I=BD143_TGACCA_L006.sorted.bam OUTPUT=BD143_TGACCA_merged.sorted.bam
 
 4.  check for the changes in the header
         
@@ -121,19 +124,19 @@ log in, and then make & change into a working directory:
 
     for sample in *.sorted.bam;do
       name=${sample%.sorted.bam}
-      java  -Xmx10g -jar picard.jar MarkDuplicates INPUT=$sample OUTPUT=$name.dedup.bam METRICS_FILE=$name.metrics.txt;
+      java  -Xmx1g -jar picard.jar MarkDuplicates INPUT=$sample OUTPUT=$name.dedup.bam METRICS_FILE=$name.metrics.txt;
     done
 
 ## Prepare for the Genome Analysis Toolkit (GATK) analysis
 1.  download Genome Analysis Toolkit (GATK)
 
         #wget https://de.cyverse.org/dl/d/6177B1E0-718A-4F95-A83B-C3B88E23C093/GenomeAnalysisTK-3.7-0.tar.bz2
-        wget https://github.com/drtamermansour/GATK_GWAS_downloads/raw/master/GenomeAnalysisTK-3.7-0.tar.bz2
+        cp /media/sf_shared_VM/GenomeAnalysisTK-3.7-0.tar.bz2 .                
         tar xjf GenomeAnalysisTK-3.7-0.tar.bz2
 
 2. Prepare GATK dictionary and index for the reference genome
         
-        java -Xmx10g -jar picard.jar CreateSequenceDictionary R=dog_chr5.fa O=dog_chr5.dict
+        java -Xmx1g -jar picard.jar CreateSequenceDictionary R=dog_chr5.fa O=dog_chr5.dict
         samtools faidx dog_chr5.fa
 
 
@@ -141,7 +144,8 @@ log in, and then make & change into a working directory:
 
 1.  Download known polymorphic sites 
 
-        wget 'ftp://ftp.ensembl.org/pub/release-89/variation/vcf/canis_familiaris/Canis_familiaris.vcf.gz' -O canis_familiaris.vcf.gz
+        #wget 'ftp://ftp.ensembl.org/pub/release-89/variation/vcf/canis_familiaris/Canis_familiaris.vcf.gz' -O canis_familiaris.vcf.gz
+        cp /media/sf_shared_VM/canis_familiaris.vcf.gz .                        
         
 2.  Select variants on chr5 and correct chr name
 
@@ -155,24 +159,25 @@ log in, and then make & change into a working directory:
 
 3.  download R (only to generate figures to observe the changes, but we will need it later as well)
 
-        sudo apt-get update && sudo apt-get -y install gdebi-core r-base
+        apt-get update && apt-get -y install gdebi-core r-base
     
     After that finishes, download and install RStudio:
     
-        wget https://download2.rstudio.org/rstudio-server-1.0.143-amd64.deb
-        sudo gdebi -n rstudio-server-1.0.143-amd64.deb 
+        #wget https://download2.rstudio.org/rstudio-server-1.0.143-amd64.deb
+        cp /media/sf_shared_VM/rstudio-server-1.0.143-amd64.deb .                                
+        gdebi -n rstudio-server-1.0.143-amd64.deb 
             
     Install some packages
    
-        sudo Rscript -e "install.packages('ggplot2', contriburl=contrib.url('http://cran.r-project.org/'))"
-        sudo Rscript -e "install.packages('gplots', contriburl=contrib.url('http://cran.r-project.org/'))"
-        sudo Rscript -e "install.packages('reshape', contriburl=contrib.url('http://cran.r-project.org/'))"
-        sudo Rscript -e "install.packages('gsalib', contriburl=contrib.url('http://cran.r-project.org/'))"
-        sudo Rscript -e "install.packages('Biobase', contriburl=contrib.url('http://bioconductor.org/packages/release/bioc/'))"
+        Rscript -e "install.packages('ggplot2', contriburl=contrib.url('http://cran.r-project.org/'))"
+        Rscript -e "install.packages('gplots', contriburl=contrib.url('http://cran.r-project.org/'))"
+        Rscript -e "install.packages('reshape', contriburl=contrib.url('http://cran.r-project.org/'))"
+        Rscript -e "install.packages('gsalib', contriburl=contrib.url('http://cran.r-project.org/'))"
+        Rscript -e "install.packages('Biobase', contriburl=contrib.url('http://bioconductor.org/packages/release/bioc/'))"
  
      Add a password to your instance
     
-        sudo passwd tx160085
+        passwd $(whoami)
     
     You will be prompted to enter a new password. Make a password you can remember: 
 
@@ -185,7 +190,7 @@ log in, and then make & change into a working directory:
         
     Copy the link to a new tab of your browser and hit `enter`. 
     
-        Username: `tx160085`
+        Username: `your user name`
         Password: `The one you just created` 
     
     Keep this tab open and will come back to it in a min. ** Now go to your web shell **
@@ -195,10 +200,10 @@ log in, and then make & change into a working directory:
         for sample in *.dedup.bam;do
           name=${sample%.dedup.bam}
           samtools index $sample
-          java -Xmx10g -jar GenomeAnalysisTK.jar -T BaseRecalibrator -R dog_chr5.fa -I $sample -knownSites canis_fam_chr5.vcf -o $name.1st.table
-          java -Xmx10g -jar GenomeAnalysisTK.jar -T BaseRecalibrator -R dog_chr5.fa -I $sample -knownSites canis_fam_chr5.vcf -BQSR $name.1st.table -o $name.2nd.table
-          java -Xmx10g -jar GenomeAnalysisTK.jar -T PrintReads -R dog_chr5.fa -I $sample -BQSR $name.2nd.table -o $name.recal.bam
-          java -Xmx10g -jar GenomeAnalysisTK.jar -T AnalyzeCovariates -R dog_chr5.fa -before $name.1st.table -after $name.2nd.table -plots $name.BQSR.pdf
+          java -Xmx1g -jar GenomeAnalysisTK.jar -T BaseRecalibrator -R dog_chr5.fa -I $sample -knownSites canis_fam_chr5.vcf -o $name.1st.table
+          java -Xmx1g -jar GenomeAnalysisTK.jar -T BaseRecalibrator -R dog_chr5.fa -I $sample -knownSites canis_fam_chr5.vcf -BQSR $name.1st.table -o $name.2nd.table
+          java -Xmx1g -jar GenomeAnalysisTK.jar -T PrintReads -R dog_chr5.fa -I $sample -BQSR $name.2nd.table -o $name.recal.bam
+          java -Xmx1g -jar GenomeAnalysisTK.jar -T AnalyzeCovariates -R dog_chr5.fa -before $name.1st.table -after $name.2nd.table -plots $name.BQSR.pdf
         done
 
 [More details](https://software.broadinstitute.org/gatk/documentation/article?id=44) about the tool and interpretation of the output figures
@@ -210,12 +215,12 @@ log in, and then make & change into a working directory:
 
         for sample in *.recal.bam;do
           name=${sample%.recal.bam}
-          java -Xmx10g -jar GenomeAnalysisTK.jar -T HaplotypeCaller -R dog_chr5.fa --dbsnp canis_fam_chr5.vcf -I $sample --emitRefConfidence GVCF -nct 3 -o $name.g.vcf
+          java -Xmx1g -jar GenomeAnalysisTK.jar -T HaplotypeCaller -R dog_chr5.fa --dbsnp canis_fam_chr5.vcf -I $sample --emitRefConfidence GVCF -nct 1 -o $name.g.vcf
         done
 
 2.  Joint Genotyping
 
-         java -Xmx10g -jar GenomeAnalysisTK.jar -T GenotypeGVCFs -R dog_chr5.fa --dbsnp canis_fam_chr5.vcf \
+         java -Xmx1g -jar GenomeAnalysisTK.jar -T GenotypeGVCFs -R dog_chr5.fa --dbsnp canis_fam_chr5.vcf \
          --variant BD143_TGACCA_merged.g.vcf \
          --variant BD174_CAGATC_L005.g.vcf \
          --variant BD225_TAGCTT_L007.g.vcf \
@@ -228,8 +233,8 @@ log in, and then make & change into a working directory:
 
 1.  Split variants into SNPs and INDELs
 
-        java -Xmx10g -jar GenomeAnalysisTK.jar -T SelectVariants -R dog_chr5.fa -V raw_variants.vcf -selectType SNP -o raw_SNP.vcf 
-        java -Xmx10g -jar GenomeAnalysisTK.jar -T SelectVariants -R dog_chr5.fa -V raw_variants.vcf -selectType INDEL -o raw_INDEL.vcf 
+        java -Xmx1g -jar GenomeAnalysisTK.jar -T SelectVariants -R dog_chr5.fa -V raw_variants.vcf -selectType SNP -o raw_SNP.vcf 
+        java -Xmx1g -jar GenomeAnalysisTK.jar -T SelectVariants -R dog_chr5.fa -V raw_variants.vcf -selectType INDEL -o raw_INDEL.vcf 
 
 2.  Explore the distribution of different annotations 
 
@@ -246,12 +251,12 @@ log in, and then make & change into a working directory:
         
 3.  Apply the filters 
  
-        java -Xmx10g -jar GenomeAnalysisTK.jar -T VariantFiltration -R dog_chr5.fa -V raw_SNP.vcf \
+        java -Xmx1g -jar GenomeAnalysisTK.jar -T VariantFiltration -R dog_chr5.fa -V raw_SNP.vcf \
         --filterExpression "QD < 2.0 || FS > 60.0 || MQ < 40.0" \
         --filterName "snp_filter" \
         -o filtered_SNP.vcf
         
-        java -Xmx10g -jar GenomeAnalysisTK.jar -T VariantFiltration -R dog_chr5.fa -V raw_INDEL.vcf \
+        java -Xmx1g -jar GenomeAnalysisTK.jar -T VariantFiltration -R dog_chr5.fa -V raw_INDEL.vcf \
         --filterExpression "QD < 2.0 || FS > 200.0" \
         --filterName "indel_filter" \
         -o filtered_INDEL.vcf
