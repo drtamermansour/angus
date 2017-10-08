@@ -1,4 +1,4 @@
-## Genome Wide Association analysis (GWAS)
+# Genome Wide Association analysis (GWAS)
 To test the association of of a genome-wide set of genetic variants with a given trait.
 
 ## install [PLINK 1.9](https://www.cog-genomics.org/plink/1.9/)
