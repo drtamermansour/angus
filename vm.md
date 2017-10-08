@@ -52,3 +52,8 @@ https://www.howtogeek.com/189974/how-to-share-your-computers-files-with-a-virtua
         sudo usermod -aG vboxsf $(whoami) 
 
 7)	Restart you VM and open new terminal 
+
+8)	Work as root
+	
+        sudo -s 
+
